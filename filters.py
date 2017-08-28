@@ -22,10 +22,6 @@ sharpen_kernel = np.array([
   [0, -1, 0]
 ])
 
-# Create a gaussian kernel
-gaussian_kernel1 = cv2.getGaussianKernel(3, 0)
-gaussian_kernel2 = cv2.getGaussianKernel(5, 0)
-
 # Create a box kernel
 box_kernel = np.array([
   [1, 1, 1],
@@ -33,8 +29,22 @@ box_kernel = np.array([
   [1, 1, 1]
 ], np.float32) / 9
 
+# Create a outline kernal
+outline_kernel = np.array([
+  [-1, -1, -1],
+  [-1, 8, -1],
+  [-1, -1, -1]
+])
+
+# Create a emboss kernal
+emboss_kernel = np.array([
+  [-2, -1, 0],
+  [-1, 1, 1],
+  [0, 1, 2]
+])
+
 # Make List to store Kernals
-kernels = [identity_kernel, sharpen_kernel, gaussian_kernel1, gaussian_kernel2, box_kernel]
+kernels = [identity_kernel, sharpen_kernel, box_kernel, outline_kernel, emboss_kernel]
 
 # Store Image in the color_original variable
 color_original = cv2.imread('TomBrady.jpg')
@@ -51,8 +61,8 @@ gray_modified = gray_original.copy()
 # Create Track bars within window to represent filters
 cv2.createTrackbar('contrast', 'app', 1, 100, dummy)
 cv2.createTrackbar('brightness', 'app', 50, 100, dummy)
-cv2.createTrackbar('filter', 'app', 0, len(kernels)-1, dummy)
 cv2.createTrackbar('grayscale', 'app', 0, 1, dummy)
+cv2.createTrackbar('filter', 'app', 0, len(kernels)-1, dummy)
 
 # Create counter variable
 count = 1
