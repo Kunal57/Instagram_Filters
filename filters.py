@@ -8,6 +8,34 @@ cv2.namedWindow('app')
 def dummy(val):
   pass
 
+# Create identity kernal
+identity_kernel = np.array([
+  [0, 0, 0],
+  [0, 1, 0],
+  [0, 0, 0]
+])
+
+# Create sharpen kernel
+sharpen_kernel = np.array([
+  [0, -1, 0],
+  [-1, 5, 1],
+  [0, -1, 0]
+])
+
+# Create a gaussian kernel
+gaussian_kernel1 = cv2.getGaussianKernel(3, 0)
+gaussian_kernel2 = cv2.getGaussianKernel(5, 0)
+
+# Create a box kernel
+box_kernel = np.array([
+  [1, 1, 1],
+  [1, 1, 1],
+  [1, 1, 1]
+], np.float32) / 9
+
+# Make List to store Kernals
+kernels = [identity_kernel, sharpen_kernel, gaussian_kernel1, gaussian_kernel2, box_kernel]
+
 # Store Image in the color_original variable
 color_original = cv2.imread('TomBrady.jpg')
 
@@ -17,7 +45,7 @@ color_modified = color_original.copy()
 # Create Track bars within window to represent filters
 cv2.createTrackbar('contrast', 'app', 1, 100, dummy)
 cv2.createTrackbar('brightness', 'app', 50, 100, dummy)
-cv2.createTrackbar('filter', 'app', 0, 1, dummy)
+cv2.createTrackbar('filter', 'app', 0, len(kernels)-1, dummy)
 cv2.createTrackbar('grayscale', 'app', 0, 1, dummy)
 
 # Loop to keep window open until 'q' key is pressed
@@ -31,9 +59,13 @@ while True:
   # Store Track bar positions in variables
   contrast = cv2.getTrackbarPos('contrast', 'app')
   brightness = cv2.getTrackbarPos('brightness', 'app')
+  kernel = cv2.getTrackbarPos('filter', 'app')
+
+  # Store Modified Image after applying filter
+  color_modified = cv2.filter2D(color_original, -1, kernels[kernel])
 
   # Add Color Modifications to the Original Image
-  color_modified = cv2.addWeighted(color_original, contrast, np.zeros(color_original.shape, dtype=color_original.dtype), 0, brightness - 50)
+  color_modified = cv2.addWeighted(color_modified, contrast, np.zeros(color_original.shape, dtype=color_original.dtype), 0, brightness - 50)
 
 # Destroy Window
 cv2.destroyAllWindows()
