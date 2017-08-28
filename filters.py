@@ -54,6 +54,9 @@ cv2.createTrackbar('brightness', 'app', 50, 100, dummy)
 cv2.createTrackbar('filter', 'app', 0, len(kernels)-1, dummy)
 cv2.createTrackbar('grayscale', 'app', 0, 1, dummy)
 
+# Create counter variable
+count = 1
+
 # Loop to keep window open until 'q' key is pressed
 while True:
   # Store Gray Scale Track bar value in grayscale variable
@@ -66,9 +69,22 @@ while True:
     # Display the Grayscale Image to the window
     cv2.imshow('app', gray_modified)
 
+  # Store Key Pressed in k variable
   k = cv2.waitKey(1) & 0xFF
+
+  # Quit it 'q' key is pressed
   if (k == ord('q')):
     break
+
+  # Save is 's' key is pressed
+  elif (k == ord('s')):
+    if (grayscale == 0):
+      # Use special substitution character to increment file name
+      cv2.imwrite('output%d.png' % count, color_modified)
+    else:
+      cv2.imwrite('output%d.png' % count, gray_modified)
+    # Increment count variable
+    count += 1
 
   # Store Track bar positions in variables
   contrast = cv2.getTrackbarPos('contrast', 'app')
